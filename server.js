@@ -5,11 +5,11 @@ import cors from '@fastify/cors'
 const { Pool } = pkg;
 
 const pool = new Pool({
-    user: 'local',
-    host: 'localhost',
-    database: 'receitas',
-    password: '12345',
-    port: '5432'
+    user:'local',
+    host:'localhost',
+    database:'Receitas',
+    password:'12345',
+    port:'5432'
 })
 
 const server = Fastify()
@@ -86,21 +86,21 @@ server.post('/usuarios', async (req, reply) => {
 })
 
 
-server.get('/categorias', async (req, reply) => {
+server.get('/categoria', async (req, reply) => {
     try {
-        const resultado = await pool.query('SELECT * FROM categorias')
+        const resultado = await pool.query('SELECT * FROM categoria')
         reply.status(200).send(resultado.rows)
     } catch (err) {
         reply.status(500).send({ error: err.message })
     }
 })
 
-server.post('/categorias', async (req, reply) => {
+server.post('/categoria', async (req, reply) => {
     const { nome } = req.body;
 
     try {
         const resultado = await pool.query(
-            'INSERT INTO CATEGORIAS (nome) VALUES ($1) RETURNING *',
+            'INSERT INTO CATEGORIA (nome) VALUES ($1) RETURNING *',
             [nome]
         )
         reply.status(200).send(resultado.rows[0])
@@ -109,12 +109,12 @@ server.post('/categorias', async (req, reply) => {
     }
 })
 
-server.put('/categorias/:id', async (req, reply) => {
+server.put('/categoria/:id', async (req, reply) => {
     const { nome } = req.body;
     const id = req.params.id;
     try {
         const resultado = await pool.query(
-            'UPDATE categorias set nome=$1 where id=$2 returning *',
+            'UPDATE categoria set nome=$1 where id=$2 returning *',
             [nome, id]
         )
         reply.status(200).send(resultado.rows[0])
@@ -123,11 +123,11 @@ server.put('/categorias/:id', async (req, reply) => {
     }
 })
 
-server.delete('/categorias/:id', async (req, reply) => {
+server.delete('/categoria/:id', async (req, reply) => {
     const id = req.params.id;
     try {
         await pool.query(
-            'Delete from categorias where id=$1',
+            'Delete from categoria where id=$1',
             [id]
         )
         reply.send({mensagem: "Deu certo!"})
@@ -141,7 +141,7 @@ server.get('/receitas', async (req, reply) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
-    const allowedOrder = ['r.id', 'r.nome', 'usuario_nome', 'categoria_nome'];
+    const allowedOrder = ['r.id', 'r.receita', 'usuario_nome', 'categoria_nome'];
     const sort = allowedOrder.includes(req.query.sort) ? req.query.sort : 'r.id';
     const order = req.query.order === 'desc' ? "DESC" : "ASC";
 
@@ -156,7 +156,7 @@ server.get('/receitas', async (req, reply) => {
             LEFT JOIN 
                 usuarios u ON r.usuario_id = u.id
             LEFT JOIN 
-                categorias c ON r.categoria_id = c.id
+                categoria c ON r.categoria_id = c.id
             ORDER BY 
                 ${sort} ${order} 
             LIMIT ${limit} 
@@ -190,7 +190,7 @@ server.get('/receitas/:id', async (req, reply) => {
             LEFT JOIN 
                 usuarios u ON r.usuario_id = u.id
             LEFT JOIN 
-                categorias c ON r.categoria_id = c.id
+                categoria c ON r.categoria_id = c.id
             WHERE 
                 r.id = $1
         `;
@@ -209,13 +209,13 @@ server.get('/receitas/:id', async (req, reply) => {
 
 server.post('/receitas', async (req, reply) => {
     const { 
-        nome, modo_preparo, ingredientes, usuario_id, 
+        receita, modo_preparo, ingredientes, usuario_id, 
         categoria_id, porcoes, tempo_preparo_minutos } = req.body;
 
     try {
         const resultado = await pool.query(
-            'INSERT INTO RECEITAS (nome, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [nome, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id ]
+            'INSERT INTO RECEITAS (receita, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [receita, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id ]
         )
         reply.status(200).send(resultado.rows[0])
     } catch (e) {
@@ -226,18 +226,18 @@ server.post('/receitas', async (req, reply) => {
 server.put('/receitas/:id', async (req, reply) => {
     const id = req.params.id;
     const { 
-        nome, modo_preparo, ingredientes, usuario_id, 
+        receita, modo_preparo, ingredientes, usuario_id, 
         categoria_id, porcoes, tempo_preparo_minutos 
     } = req.body;
 
     try {
         const resultado = await pool.query(
             `UPDATE receitas 
-             SET nome=$1, modo_preparo=$2, ingredientes=$3, porcoes=$4, 
+             SET receita=$1, modo_preparo=$2, ingredientes=$3, porcoes=$4, 
                  tempo_preparo_minutos=$5, usuario_id=$6, categoria_id=$7 
              WHERE id=$8 
              RETURNING *`,
-            [nome, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id, id]
+            [receita, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id, id]
         );
 
         if (resultado.rows.length === 0) {
