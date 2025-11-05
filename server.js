@@ -7,7 +7,7 @@ const { Pool } = pkg;
 const pool = new Pool({
     user:'local',
     host:'localhost',
-    database:'Receitas',
+    database:'receitas',
     password:'12345',
     port:'5432'
 })
@@ -88,8 +88,9 @@ server.post('/usuarios', async (req, reply) => {
 
 server.get('/categoria', async (req, reply) => {
     try {
-        const resultado = await pool.query('SELECT * FROM categoria')
-        reply.status(200).send(resultado.rows)
+        const resultado = await pool.query('SELECT * FROM categorias')
+        const count = await pool.query("SELECT COUNT(*) FROM CATEGORIAs")
+        reply.status(200).send({data: resultado.rows, count: parseInt(count.rows[0].count) })
     } catch (err) {
         reply.status(500).send({ error: err.message })
     }
@@ -100,7 +101,7 @@ server.post('/categoria', async (req, reply) => {
 
     try {
         const resultado = await pool.query(
-            'INSERT INTO CATEGORIA (nome) VALUES ($1) RETURNING *',
+            'INSERT INTO categorias (nome) VALUES ($1) RETURNING *',
             [nome]
         )
         reply.status(200).send(resultado.rows[0])
@@ -114,7 +115,7 @@ server.put('/categoria/:id', async (req, reply) => {
     const id = req.params.id;
     try {
         const resultado = await pool.query(
-            'UPDATE categoria set nome=$1 where id=$2 returning *',
+            'UPDATE categorias set nome=$1 where id=$2 returning *',
             [nome, id]
         )
         reply.status(200).send(resultado.rows[0])
@@ -127,7 +128,7 @@ server.delete('/categoria/:id', async (req, reply) => {
     const id = req.params.id;
     try {
         await pool.query(
-            'Delete from categoria where id=$1',
+            'Delete from categorias where id=$1',
             [id]
         )
         reply.send({mensagem: "Deu certo!"})
@@ -141,7 +142,7 @@ server.get('/receitas', async (req, reply) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
-    const allowedOrder = ['r.id', 'r.receita', 'usuario_nome', 'categoria_nome'];
+    const allowedOrder = ['r.id', 'r.nome', 'usuario_nome', 'categoria_nome'];
     const sort = allowedOrder.includes(req.query.sort) ? req.query.sort : 'r.id';
     const order = req.query.order === 'desc' ? "DESC" : "ASC";
 
@@ -209,13 +210,13 @@ server.get('/receitas/:id', async (req, reply) => {
 
 server.post('/receitas', async (req, reply) => {
     const { 
-        receita, modo_preparo, ingredientes, usuario_id, 
+        nome, modo_preparo, ingredientes, usuario_id, 
         categoria_id, porcoes, tempo_preparo_minutos } = req.body;
 
     try {
         const resultado = await pool.query(
-            'INSERT INTO RECEITAS (receita, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [receita, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id ]
+            'INSERT INTO receita (nome, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [nome, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id ]
         )
         reply.status(200).send(resultado.rows[0])
     } catch (e) {
