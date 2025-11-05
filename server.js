@@ -5,11 +5,11 @@ import cors from '@fastify/cors'
 const { Pool } = pkg;
 
 const pool = new Pool({
-    user:'local',
-    host:'localhost',
-    database:'receitas',
-    password:'12345',
-    port:'5432'
+    user: 'local',
+    host: 'localhost',
+    database: 'receitas',
+    password: '12345',
+    port: '5432'
 })
 
 const server = Fastify()
@@ -86,22 +86,21 @@ server.post('/usuarios', async (req, reply) => {
 })
 
 
-server.get('/categoria', async (req, reply) => {
+server.get('/categorias', async (req, reply) => {
     try {
         const resultado = await pool.query('SELECT * FROM categorias')
-        const count = await pool.query("SELECT COUNT(*) FROM CATEGORIAs")
-        reply.status(200).send({data: resultado.rows, count: parseInt(count.rows[0].count) })
+        reply.status(200).send(resultado.rows)
     } catch (err) {
         reply.status(500).send({ error: err.message })
     }
 })
 
-server.post('/categoria', async (req, reply) => {
+server.post('/categorias', async (req, reply) => {
     const { nome } = req.body;
 
     try {
         const resultado = await pool.query(
-            'INSERT INTO categorias (nome) VALUES ($1) RETURNING *',
+            'INSERT INTO CATEGORIAS (nome) VALUES ($1) RETURNING *',
             [nome]
         )
         reply.status(200).send(resultado.rows[0])
@@ -110,7 +109,7 @@ server.post('/categoria', async (req, reply) => {
     }
 })
 
-server.put('/categoria/:id', async (req, reply) => {
+server.put('/categorias/:id', async (req, reply) => {
     const { nome } = req.body;
     const id = req.params.id;
     try {
@@ -124,7 +123,7 @@ server.put('/categoria/:id', async (req, reply) => {
     }
 })
 
-server.delete('/categoria/:id', async (req, reply) => {
+server.delete('/categorias/:id', async (req, reply) => {
     const id = req.params.id;
     try {
         await pool.query(
@@ -157,7 +156,7 @@ server.get('/receitas', async (req, reply) => {
             LEFT JOIN 
                 usuarios u ON r.usuario_id = u.id
             LEFT JOIN 
-                categoria c ON r.categoria_id = c.id
+                categorias c ON r.categoria_id = c.id
             ORDER BY 
                 ${sort} ${order} 
             LIMIT ${limit} 
@@ -191,7 +190,7 @@ server.get('/receitas/:id', async (req, reply) => {
             LEFT JOIN 
                 usuarios u ON r.usuario_id = u.id
             LEFT JOIN 
-                categoria c ON r.categoria_id = c.id
+                categorias c ON r.categoria_id = c.id
             WHERE 
                 r.id = $1
         `;
@@ -215,7 +214,7 @@ server.post('/receitas', async (req, reply) => {
 
     try {
         const resultado = await pool.query(
-            'INSERT INTO receita (nome, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            'INSERT INTO RECEITAS (nome, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
             [nome, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id ]
         )
         reply.status(200).send(resultado.rows[0])
@@ -227,18 +226,18 @@ server.post('/receitas', async (req, reply) => {
 server.put('/receitas/:id', async (req, reply) => {
     const id = req.params.id;
     const { 
-        receita, modo_preparo, ingredientes, usuario_id, 
+        nome, modo_preparo, ingredientes, usuario_id, 
         categoria_id, porcoes, tempo_preparo_minutos 
     } = req.body;
 
     try {
         const resultado = await pool.query(
             `UPDATE receitas 
-             SET receita=$1, modo_preparo=$2, ingredientes=$3, porcoes=$4, 
+             SET nome=$1, modo_preparo=$2, ingredientes=$3, porcoes=$4, 
                  tempo_preparo_minutos=$5, usuario_id=$6, categoria_id=$7 
              WHERE id=$8 
              RETURNING *`,
-            [receita, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id, id]
+            [nome, modo_preparo, ingredientes, porcoes, tempo_preparo_minutos, usuario_id, categoria_id, id]
         );
 
         if (resultado.rows.length === 0) {

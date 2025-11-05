@@ -14,11 +14,11 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/categoria
+GET http://localhost:3000/categorias
 
 ###
 
-POST http://localhost:3000/categoria
+POST http://localhost:3000/categorias
 Content-Type: application/json
 
 {
@@ -43,11 +43,11 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:3000/categoria/2
+DELETE http://localhost:3000/categorias/2
 
 ###
 
-PUT http://localhost:3000/categoria/2
+PUT http://localhost:3000/categorias/2
 Content-Type: application/json
 
 {
@@ -57,7 +57,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3000/receitas?page=2&limit=10
+GET http://localhost:3000/receitas
 
 ###
 
@@ -72,8 +72,8 @@ Content-Type: application/json
     "nome": "Bolo de Cenoura",
     "modo_preparo": "corta cenoura, mistura com trigo, leva ao forno",
     "ingredientes": "cenoura, trigo e ovo",
-    "usuario_id": 1,
-    "categoria_id": 1,
+    "usuario_id": 3,
+    "categoria_id": 3,
     "porcoes": 12,
     "tempo_preparo_minutos": 45
 }
@@ -84,7 +84,7 @@ POST http://localhost:3000/receitas
 Content-Type: application/json
 
 {
-    "receita": "Bolo de MILHO",
+    "nome": "Bolo de MILHO",
     "modo_preparo": "Joga o milho na forma, mistura com trigo, leva ao forno",
     "ingredientes": "milho, trigo e ovo",
     "usuario_id": 3,
@@ -99,7 +99,7 @@ POST http://localhost:3000/receitas
 Content-Type: application/json
 
 {
-    "receita": "Bolo de chocolate",
+    "nome": "Bolo de chocolate",
     "modo_preparo": "achocolatado misturado com trigo, leva ao forno",
     "ingredientes": "achocolatado, trigo e ovo",
     "usuario_id": 3,
@@ -114,7 +114,7 @@ POST http://localhost:3000/receitas
 Content-Type: application/json
 
 {
-    "receita": "Bolo de limão",
+    "nome": "Bolo de limão",
     "modo_preparo": "limão misturado com trigo, leva ao forno",
     "ingredientes": "limão, trigo e ovo",
     "usuario_id": 3,
@@ -130,7 +130,7 @@ POST http://localhost:3000/receitas
 Content-Type: application/json
 
 {
-    "receita": "Bolo de morango",
+    "nome": "Bolo de morango",
     "modo_preparo": "morango misturado com trigo, leva ao forno",
     "ingredientes": "morango, trigo e ovo",
     "usuario_id": 3,
@@ -145,7 +145,7 @@ POST http://localhost:3000/receitas
 Content-Type: application/json
 
 {
-    "receita": "Bolo de banana",
+    "nome": "Bolo de banana",
     "modo_preparo": "banana misturado com trigo, leva ao forno",
     "ingredientes": "banana, trigo e ovo",
     "usuario_id": 3,
@@ -160,7 +160,7 @@ POST http://localhost:3000/receitas
 Content-Type: application/json
 
 {
-    "receita": "Bolo de abacaxi",
+    "nome": "Bolo de abacaxi",
     "modo_preparo": "abacaxi misturado com trigo, leva ao forno",
     "ingredientes": "abacaxi, trigo e ovo",
     "usuario_id": 3,
@@ -176,7 +176,7 @@ POST http://localhost:3000/receitas
 Content-Type: application/json
 
 {
-    "receita": "Bolo de whey",
+    "nome": "Bolo de whey",
     "modo_preparo": "whey misturado com trigo, leva ao forno",
     "ingredientes": "whey, trigo e ovo",
     "usuario_id": 3,
@@ -191,7 +191,7 @@ POST http://localhost:3000/receitas
 Content-Type: application/json
 
 {
-    "receita": "Bolo de 4 leites",
+    "nome": "Bolo de 4 leites",
     "modo_preparo": "4 leites misturado com trigo, leva ao forno",
     "ingredientes": "4 leites, trigo e ovo",
     "usuario_id": 3,
@@ -206,7 +206,7 @@ POST http://localhost:3000/receitas
 Content-Type: application/json
 
 {
-    "receita": "Bolo de doce de leite",
+    "nome": "Bolo de doce de leite",
     "modo_preparo": "doce de leite misturado com trigo, leva ao forno",
     "ingredientes": "doce de leite, trigo e ovo",
     "usuario_id": 3,
@@ -224,7 +224,7 @@ PUT http://localhost:3000/receitas/1
 Content-Type: application/json
 
 {
-    "receita": "Bolo de Cenoura com Cobertura",
+    "nome": "Bolo de Cenoura com Cobertura",
     "modo_preparo": "corta cenoura, mistura com trigo, leva ao forno, joga cobertura",
     "ingredientes": "cenoura, trigo, ovo e chocolate",
     "usuario_id": 3,
