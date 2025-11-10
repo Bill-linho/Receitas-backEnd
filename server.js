@@ -96,8 +96,6 @@ server.get('/categorias', async (req, reply) => {
 
         const count = await pool.query("SELECT COUNT(*) FROM categorias")
         reply.status(200).send({data: resultado.rows, count: parseInt(count.rows[0].count) })
-        const count = await pool.query("SELECT COUNT(*) FROM categorias")
-        reply.status(200).send({data: resultado.rows, count: parseInt(count.rows[0].count) })
     } catch (err) {
         reply.status(500).send({ error: err.message })
     }
