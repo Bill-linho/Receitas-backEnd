@@ -85,21 +85,19 @@ server.post('/usuarios', async (req, reply) => {
     }
 })
 
-
 server.get('/categorias', async (req, reply) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const offset = (page - 1) * limit;
     try {
-        const resultado = await pool.query('SELECT * FROM categorias')
-        reply.status(200).send(resultado.rows)
+        const resultado = await pool.query('SELECT * FROM categorias');
+        const count = await pool.query('SELECT COUNT(*) FROM categorias');
 
-        const count = await pool.query("SELECT COUNT(*) FROM categorias")
-        reply.status(200).send({data: resultado.rows, count: parseInt(count.rows[0].count) })
+        reply.status(200).send({
+            data: resultado.rows,
+            count: parseInt(count.rows[0].count)
+        });
     } catch (err) {
-        reply.status(500).send({ error: err.message })
+        reply.status(500).send({ error: err.message });
     }
-})
+});
 
 server.post('/categorias', async (req, reply) => {
     const { nome } = req.body;
